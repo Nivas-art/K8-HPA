@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: expense
+  labels:
+    project: for_deploy
+    env: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+      project: frontend
+      env: frontend
+  template:
+    metadata:
+      name: deployement
+      labels:
+        app: nginx
+        project: frontend
+        env: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: munaga123/frontend:v1.0
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: service
+  namespace: expense
+spec:
+  selector:
+    app: nginx
+    project: frontend
+    env: frontend
+  ports:
+  - name: nginx
+    protocol: TCP
+    port: 80 #service port
+    targetPort: 80 #target port
+
+    
